@@ -1,15 +1,15 @@
 package alyjah.io.daraja.client.util;
 
-import camacuchi.keycloak.proxy.exception.BadRequestException;
-import camacuchi.keycloak.proxy.exception.GatewayException;
+import alyjah.io.daraja.client.exception.BadRequestException;
+import alyjah.io.daraja.client.exception.GatewayException;
 import org.springframework.http.client.ClientHttpResponse;
 import org.springframework.util.StreamUtils;
 
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
 
-import static camacuchi.keycloak.proxy.util.ErrorCodes.BAD_REQUEST_EXCEPTION;
-import static camacuchi.keycloak.proxy.util.ErrorCodes.GATEWAY_EXCEPTION;
+import static alyjah.io.daraja.client.util.ErrorCodes.BAD_REQUEST_EXCEPTION;
+import static alyjah.io.daraja.client.util.ErrorCodes.GATEWAY_EXCEPTION;
 
 
 public class Helpers {
