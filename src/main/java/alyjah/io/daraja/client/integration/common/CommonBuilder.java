@@ -27,7 +27,7 @@ public class CommonBuilder {
 
     public MultiValueMap<String, String> buildBasicAuthorizationHeader(String consumerKey, String consumerSecret) {
         MultiValueMap<String, String> map = new LinkedMultiValueMap<>();
-        map.add(HttpHeaders.AUTHORIZATION, "Basic ".concat(Base64.getEncoder().encodeToString((consumerKey + ":" + consumerKey).getBytes(UTF_8))));
+        map.add(HttpHeaders.AUTHORIZATION, "Basic ".concat(Base64.getEncoder().encodeToString((consumerKey + ":" + consumerSecret).getBytes(UTF_8))));
         return map;
     }
 }

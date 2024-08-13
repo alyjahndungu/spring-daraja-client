@@ -24,4 +24,12 @@ public class DarajaConfig {
    private String simulateTransactionEndpoint;
 
    private String shortCode;
+
+   private  String stkPushEndpoint;
+
+   private String stkPushShortCode;
+
+   private String stkPushCallbackUrl;
+
+   private  String stkPushPasskey;
 }
