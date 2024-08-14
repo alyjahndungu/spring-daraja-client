@@ -2,7 +2,7 @@ package alyjah.io.daraja.client.integration.stkpush.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-public record StkPushRequest(
+public record MpesaExpressRequest(
         @JsonProperty("TransactionType") String transactionType,
         @JsonProperty("Amount") String amount,
         @JsonProperty("CallBackURL") String callBackURL,

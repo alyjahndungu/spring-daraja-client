@@ -32,4 +32,6 @@ public class DarajaConfig {
    private String stkPushCallbackUrl;
 
    private  String stkPushPasskey;
+
+   private String stkPushQueryEndpoint;
 }
