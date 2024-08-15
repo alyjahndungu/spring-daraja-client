@@ -30,9 +30,7 @@ public class MpesaExpressTransactions {
     @Column(name = "id", updatable = false, nullable = false)
     private String id;
 
-    private String accountReference;
-
-    private String transactionReceiptNumber;
+    private String transactionReference;
 
     private BigDecimal amount;
 
@@ -44,11 +42,13 @@ public class MpesaExpressTransactions {
 
     private String checkoutRequestId;
 
-    private String resultCode;
+    private int resultCode;
 
     private String resultDescription;
 
     private String transactionDate;
+
+    private boolean acknowledged;
 
     @Column(name = "created_at", nullable = false, updatable = false)
     @CreatedDate

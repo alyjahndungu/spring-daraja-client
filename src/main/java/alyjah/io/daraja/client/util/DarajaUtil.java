@@ -1,5 +1,6 @@
 package alyjah.io.daraja.client.util;
 
+import alyjah.io.daraja.client.business.ExpressTransactionService;
 import alyjah.io.daraja.client.config.DarajaConfig;
 import alyjah.io.daraja.client.integration.common.CommonBuilder;
 import alyjah.io.daraja.client.integration.stkpush.MpesaExpressApi;
@@ -26,6 +27,11 @@ public class DarajaUtil {
     private final MpesaExpressApi mpesaExpressApi;
     private final CommonBuilder commonBuilder;
     private final DarajaConfig darajaConfig;
+    private final ExpressTransactionService expressTransactionService;
+
+    final String encodedPassword = Helpers.encodePasswordToBase64(darajaConfig.getStkPushShortCode(), darajaConfig.getStkPushPasskey());
+    final String accountReference = Helpers.getSecureUniqueString();
+    final String timestamp = Helpers.getTransactionTimestamp();
 
     public TokenResponse getClientToken() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
@@ -48,14 +54,15 @@ public class DarajaUtil {
         headers.addAll(commonBuilder.buildBearerAuthorizationHeader(tokenResponse.accessToken()));
         headers.addAll(commonBuilder.buildContentTypeHeader(MediaType.APPLICATION_JSON_VALUE));
 
-        String encodedPassword = Helpers.encodePasswordToBase64(darajaConfig.getStkPushShortCode(), darajaConfig.getStkPushPasskey());
-
-        return mpesaExpressApi.simulateMpesaExpressTransaction(
-                new MpesaExpressRequest(ETransactionType.CUSTOMER_PAYBILL_ONLINE.getType(), request.amount(), darajaConfig.getStkPushCallbackUrl(), request.phoneNumber(),  request.phoneNumber(), darajaConfig.getStkPushShortCode(), Helpers.getSecureUniqueString(), request.description(), darajaConfig.getStkPushShortCode(), Helpers.getTransactionTimestamp(),  encodedPassword),
+        MpesaExpressResponse response = mpesaExpressApi.simulateMpesaExpressTransaction(
+                new MpesaExpressRequest(ETransactionType.CUSTOMER_PAYBILL_ONLINE.getType(), request.amount(), darajaConfig.getStkPushCallbackUrl(), request.phoneNumber(), request.phoneNumber(), darajaConfig.getStkPushShortCode(), accountReference, "", darajaConfig.getStkPushShortCode(), timestamp, encodedPassword),
                 new LinkedMultiValueMap<>(),
                 headers,
                 darajaConfig.getStkPushEndpoint()
         );
+
+        expressTransactionService.save(response.checkoutRequestID(), response.merchantRequestID(), request.amount(), request.phoneNumber(), accountReference);
+        return response;
     }
 
     public MpesaExpressQueryResponse queryMpesaExpressTransaction(String businessShortCode, String password, String timestamp, String checkoutRequestId) {

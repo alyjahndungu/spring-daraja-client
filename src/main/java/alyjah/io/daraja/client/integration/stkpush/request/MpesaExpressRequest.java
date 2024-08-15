@@ -2,9 +2,11 @@ package alyjah.io.daraja.client.integration.stkpush.request;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
 
+import java.math.BigDecimal;
+
 public record MpesaExpressRequest(
         @JsonProperty("TransactionType") String transactionType,
-        @JsonProperty("Amount") String amount,
+        @JsonProperty("Amount") BigDecimal amount,
         @JsonProperty("CallBackURL") String callBackURL,
         @JsonProperty("PhoneNumber") String phoneNumber,
         @JsonProperty("PartyA") String partyA,
