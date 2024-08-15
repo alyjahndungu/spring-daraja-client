@@ -13,14 +13,12 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.Base64;
 
-import static alyjah.io.daraja.client.util.ErrorCodes.BAD_REQUEST_EXCEPTION;
 import static alyjah.io.daraja.client.util.ErrorCodes.GATEWAY_EXCEPTION;
 import static java.nio.charset.StandardCharsets.UTF_8;
 
 
 public class Helpers {
 
-    // Formatter for timestamp
     private static final DateTimeFormatter FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss")
             .withZone(ZoneId.systemDefault());
     private static final SecureRandom secureRandom = new SecureRandom(); // Thread-safe
@@ -30,7 +28,6 @@ public class Helpers {
     public static void handleHttpError(ClientHttpResponse response) throws IOException {
         String responseErrorString = StreamUtils.copyToString(response.getBody(), StandardCharsets.UTF_8);
         if (response.getStatusCode().is4xxClientError()) {
-//            throw new BadRequestException(BAD_REQUEST_EXCEPTION.getStatusCode(), new Throwable(responseErrorString));
             throw new BadRequestException(responseErrorString);
         } else if (response.getStatusCode().is5xxServerError()) {
             throw new GatewayException(GATEWAY_EXCEPTION.getStatusCode(), new Throwable(responseErrorString));

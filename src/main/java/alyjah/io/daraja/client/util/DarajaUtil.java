@@ -29,9 +29,6 @@ public class DarajaUtil {
     private final DarajaConfig darajaConfig;
     private final ExpressTransactionService expressTransactionService;
 
-    final String encodedPassword = Helpers.encodePasswordToBase64(darajaConfig.getStkPushShortCode(), darajaConfig.getStkPushPasskey());
-    final String accountReference = Helpers.getSecureUniqueString();
-    final String timestamp = Helpers.getTransactionTimestamp();
 
     public TokenResponse getClientToken() {
         MultiValueMap<String, String> queryParams = new LinkedMultiValueMap<>();
@@ -54,14 +51,18 @@ public class DarajaUtil {
         headers.addAll(commonBuilder.buildBearerAuthorizationHeader(tokenResponse.accessToken()));
         headers.addAll(commonBuilder.buildContentTypeHeader(MediaType.APPLICATION_JSON_VALUE));
 
+         String encodedPassword = Helpers.encodePasswordToBase64(darajaConfig.getStkPushShortCode(), darajaConfig.getStkPushPasskey());
+         String accountReference = Helpers.getSecureUniqueString();
+         String transactionTimestamp= Helpers.getTransactionTimestamp();
+
         MpesaExpressResponse response = mpesaExpressApi.simulateMpesaExpressTransaction(
-                new MpesaExpressRequest(ETransactionType.CUSTOMER_PAYBILL_ONLINE.getType(), request.amount(), darajaConfig.getStkPushCallbackUrl(), request.phoneNumber(), request.phoneNumber(), darajaConfig.getStkPushShortCode(), accountReference, "", darajaConfig.getStkPushShortCode(), timestamp, encodedPassword),
+                new MpesaExpressRequest(ETransactionType.CUSTOMER_PAYBILL_ONLINE.getType(), request.amount(), darajaConfig.getStkPushCallbackUrl(), request.phoneNumber(), request.phoneNumber(), darajaConfig.getStkPushShortCode(), accountReference, "Online Payment", darajaConfig.getStkPushShortCode(), transactionTimestamp, encodedPassword),
                 new LinkedMultiValueMap<>(),
                 headers,
                 darajaConfig.getStkPushEndpoint()
         );
 
-        expressTransactionService.save(response.checkoutRequestID(), response.merchantRequestID(), request.amount(), request.phoneNumber(), accountReference);
+        expressTransactionService.save(response.checkoutRequestID(), response.merchantRequestID(), request.amount(), request.phoneNumber(), accountReference, transactionTimestamp);
         return response;
     }
 

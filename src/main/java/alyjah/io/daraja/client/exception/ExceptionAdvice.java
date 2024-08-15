@@ -36,6 +36,13 @@ public class ExceptionAdvice {
                 .body(new ExceptionResponse(List.of(e.getMessage())));
     }
 
+    @ExceptionHandler(NotFoundException.class)
+    public ResponseEntity<ExceptionResponse> error(NotFoundException e) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(new ExceptionResponse(List.of(e.getMessage())));
+    }
+
 
     @ExceptionHandler(GatewayException.class)
     public ResponseEntity<ExceptionResponse> error(GatewayException e) {

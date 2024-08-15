@@ -8,5 +8,5 @@ public interface ExpressTransactionService {
 
     MpesaExpressTransactions update(String checkoutRequestID, String merchantRequestID, int resultCode, String resultDesc);
 
-    void save(String checkoutRequestID, String merchantRequestID, BigDecimal amount, String phoneNumber, String accountReference);
+    void save(String checkoutRequestID, String merchantRequestID, BigDecimal amount, String phoneNumber, String accountReference, String transactionTimestamp);
 }

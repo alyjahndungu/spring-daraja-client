@@ -1,5 +1,6 @@
 package alyjah.io.daraja.client.business;
 
+import alyjah.io.daraja.client.exception.NotFoundException;
 import alyjah.io.daraja.client.model.MpesaExpressTransactions;
 import alyjah.io.daraja.client.repository.ExpressTransactionRepository;
 import lombok.RequiredArgsConstructor;
@@ -14,12 +15,14 @@ public class ExpressTransactionServiceImpl implements ExpressTransactionService 
 
 
     @Override
-    public void save(String checkoutRequestID, String merchantRequestID, BigDecimal amount, String phoneNumber, String accountReference) {
+    public void save(String checkoutRequestID, String merchantRequestID, BigDecimal amount, String phoneNumber, String accountReference, String transactionTimestamp) {
        MpesaExpressTransactions transactions = MpesaExpressTransactions.builder()
                .transactionReference(accountReference)
                .merchantRequestId(merchantRequestID)
                .amount(amount)
                .checkoutRequestId(checkoutRequestID)
+               .phoneNumber(phoneNumber)
+               .transactionDate(transactionTimestamp)
                .build();
        expressTransactionRepository.save(transactions);
     }
@@ -27,13 +30,16 @@ public class ExpressTransactionServiceImpl implements ExpressTransactionService 
     @Override
     public MpesaExpressTransactions update(String checkoutRequestID, String merchantRequestID, int resultCode, String resultDesc) {
         return expressTransactionRepository.findMpesaExpressTransactionsByMerchantRequestIdAndCheckoutRequestId(merchantRequestID, checkoutRequestID)
-                .flatMap(mpesaExpressTransactions -> {
+                .map(mpesaExpressTransactions -> {
                     mpesaExpressTransactions.setCheckoutRequestId(checkoutRequestID);
                     mpesaExpressTransactions.setResultCode(resultCode);
                     mpesaExpressTransactions.setResultDescription(resultDesc);
+                    if(resultCode == 0) mpesaExpressTransactions.setAcknowledged(true);
                     return expressTransactionRepository.save(mpesaExpressTransactions);
-                }).orElseGet(new MpesaExpressTransactions())
+                })
+                .orElseThrow(() -> new NotFoundException("Transaction not found"));
     }
+
 
 
 
