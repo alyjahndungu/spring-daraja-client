@@ -30,12 +30,12 @@ public class ExceptionAdvice {
     }
 
     @ExceptionHandler(BadRequestException.class)
-    public ResponseEntity<ExceptionResponse> error(BadRequestException e) {
+    public ResponseEntity<ExceptionResponse> handleException(BadRequestException e) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(List.of(e.getMessage())));
     }
 
     @ExceptionHandler(NotFoundException.class)
-    public ResponseEntity<ExceptionResponse> error(NotFoundException e) {
+    public ResponseEntity<ExceptionResponse> handleException(NotFoundException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_REQUEST)
                 .body(new ExceptionResponse(List.of(e.getMessage())));
@@ -43,30 +43,30 @@ public class ExceptionAdvice {
 
 
     @ExceptionHandler(GatewayException.class)
-    public ResponseEntity<ExceptionResponse> error(GatewayException e) {
+    public ResponseEntity<ExceptionResponse> handleException(GatewayException e) {
         return ResponseEntity
                 .status(HttpStatus.BAD_GATEWAY)
                 .body(new ExceptionResponse(List.of(e.getMessage())));
     }
 
     @ExceptionHandler(HttpMessageNotReadableException.class)
-    public ResponseEntity<ExceptionResponse> handleHttpMessageNotReadableException(HttpMessageNotReadableException ex) {
+    public ResponseEntity<ExceptionResponse> handleException(HttpMessageNotReadableException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(MissingServletRequestParameterException.class)
-    public ResponseEntity<ExceptionResponse> handleMissingServletRequestParameterException(MissingServletRequestParameterException ex) {
+    public ResponseEntity<ExceptionResponse> handleException(MissingServletRequestParameterException ex) {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(HttpMediaTypeNotSupportedException.class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
-    public ResponseEntity<ExceptionResponse> handleInternalServerException(HttpMediaTypeNotSupportedException ex) {
+    public ResponseEntity<ExceptionResponse> handleException(HttpMediaTypeNotSupportedException ex) {
         return ResponseEntity.status(HttpStatus.BAD_GATEWAY).body(new ExceptionResponse(List.of(ex.getMessage())));
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)
-    public ResponseEntity<Map<String, String>> handleMethodArgumentNotValid(MethodArgumentNotValidException ex) {
+    public ResponseEntity<Map<String, String>> handleException(MethodArgumentNotValidException ex) {
         Map<String, String> errors = new HashMap<>();
         ex.getBindingResult().getFieldErrors().forEach(error ->
                 errors.put(error.getField(), error.getDefaultMessage())
