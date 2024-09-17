@@ -26,14 +26,12 @@ public class ExceptionAdvice {
                 .stream()
                 .map(DefaultMessageSourceResolvable::getDefaultMessage)
                 .toList();
-        return ResponseEntity.badRequest().body(new ExceptionResponse(errors));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(errors));
     }
 
     @ExceptionHandler(BadRequestException.class)
     public ResponseEntity<ExceptionResponse> error(BadRequestException e) {
-        return ResponseEntity
-                .status(HttpStatus.BAD_REQUEST)
-                .body(new ExceptionResponse(List.of(e.getMessage())));
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ExceptionResponse(List.of(e.getMessage())));
     }
 
     @ExceptionHandler(NotFoundException.class)

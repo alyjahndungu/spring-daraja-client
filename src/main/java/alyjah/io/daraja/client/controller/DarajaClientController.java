@@ -36,8 +36,6 @@ public class DarajaClientController {
     @SneakyThrows
     @PostMapping(path = "/stk-transaction-result", produces = "application/json")
     public ResponseEntity<StkCallbackResponse> stkCallback(@RequestBody StkCallbackResponse response) {
-        log.info("======= STK Push Async Response =====");
-        log.info(response.toString());
         expressTransactionService.update(response.body().stkCallback().checkoutRequestID(), response.body().stkCallback().merchantRequestID(), response.body().stkCallback().resultCode(), response.body().stkCallback().resultDesc());
         return ResponseEntity.ok(response);
     }
